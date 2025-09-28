@@ -1,0 +1,29 @@
+version: 0.2
+        
+phases:
+  install:
+    runtime-versions:
+      python: 3.10 # IT WILL INSTALL PYTHON ON THE ENVIRONMENT (EC2)
+    commands:
+      - echo === INSTALL YOUR PACKAGES HERE!!! ===
+    
+  pre_build:
+    commands:
+      - echo === CHECKING FOR PYTHON INSTALL ===
+      - python3 --version
+      - echo === CHECKING FOR PYTHON INSTALL ===
+      - aws --version
+    
+  build:
+    commands:
+      - echo === RUN OUR CODE/APP ===
+      - python3 my_app.py # Run the app
+    
+  post_build:
+    commands:
+      - echo === ACTION TO TAKE WHEN BUILD IS COMPLETE ===
+      - echo Build completed at `date`...
+    
+artifacts:
+  files:
+    - '**/*' # This is grab everything and zip it
