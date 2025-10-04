@@ -5,19 +5,25 @@ phases:
     runtime-versions:
       python: 3.10 # IT WILL INSTALL PYTHON ON THE ENVIRONMENT (EC2)
     commands:
-      - echo === INSTALL YOUR PACKAGES HERE!!! ===
+      - echo === INSTALL CFN-LINT ===
+      - pip3 install cfn-lint
     
   pre_build:
     commands:
       - echo === CHECKING FOR PYTHON INSTALL ===
       - python3 --version
-      - echo === CHECKING FOR PYTHON INSTALL ===
+      - echo === CHECKING FOR AWSCLI INSTALL ===
       - aws --version
+      - echo === CHECKING FOR CFN-LINT ===
+      - cfn-lint --version
     
   build:
     commands:
-      - echo === RUN OUR CODE/APP ===
-      - python3 my_app.py # Run the app
+      - echo === TEST OUR TEMPLATE ===
+      - cfn-lint 1-ec2-user-data.yaml
+      - echo *** TEMPLATE TEST COMPLETED ***
+      - echo === BUILD OUR TEMPLATE ===
+      - aws cloudformation package --template-file 1-ec2-user-data.yaml --s3-bucket my-deployed-artifacts-bucket --output-template-file build-artifact-template.yaml
     
   post_build:
     commands:
@@ -26,4 +32,4 @@ phases:
     
 artifacts:
   files:
-    - '**/*' # This is grab everything and zip it
+    - build-artifact-template.yaml # Creates the zip file (artitact) ---> in the deploy stage
